@@ -1,17 +1,20 @@
 package com.example.telegrambot;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Map;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Document
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class Vocabulary {
-    private String name;
-    private Map<String, String> words;
+    @Id
+    String name;
+    Map<String, String> words;
 }

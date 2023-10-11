@@ -1,15 +1,19 @@
 package com.example.telegrambot;
 
+import com.example.telegrambot.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class BisinessLogic {
+public class VocabularyService {
     private final VocabularyRepository vocabularyRepository;
-    private final Vocabulary vocabulary = new Vocabulary();
+    private final VocabularyDto vocabulary = new VocabularyDto();
 
 
     public String askName() {
@@ -41,7 +45,7 @@ public class BisinessLogic {
         return vocabularyRepository.findAll().toString();
     }
 
-    public void saveVocabulary(VocabularyMongo vocabularyMongo) {
+    public void saveVocabulary(Vocabulary vocabularyMongo) {
         vocabularyRepository.save(vocabularyMongo);
     }
 
@@ -51,9 +55,9 @@ public class BisinessLogic {
 
 
     public List<String> trainVoca(String name) {
-        Map<String, String> trainVoca = vocabularyRepository.findByName(name).getWords(); //TODO Optional
+        Map<String, String> trainVoca = vocabularyRepository.findByName(name).orElseThrow(() -> new NotFoundException("Ничего не найдено")).getWords();
         List<String> result = new ArrayList<>();
-        for (Map.Entry<String, String> word: trainVoca.entrySet()) {
+        for (Map.Entry<String, String> word : trainVoca.entrySet()) {
             result.add(word.getValue());
             result.add("Правильный ответ - " + word.getKey());
         }

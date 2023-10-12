@@ -57,6 +57,11 @@ public class Bot extends TelegramLongPollingBot {
                 sendMessage(chatId, service.askName());
                 flag = TRAINING;
             }
+            if (update.getCallbackQuery().getData().equals("delete_dictionaries")) {
+                flag = DELETE;
+                sendMessage(chatId, service.askName());
+
+            }
         }
         if (update.hasMessage()) {
             chatId = update.getMessage().getChatId();
@@ -98,13 +103,15 @@ public class Bot extends TelegramLongPollingBot {
                             throw new RuntimeException(e);
                         }
                     }
+                case DELETE:
+                    messageText = update.getMessage().getText();
+                    sendMessage(chatId, service.deleteVoca(messageText));
                 default:
                     startMessage(chatId);
             }
 
         }
     }
-
 
 
     private InlineKeyboardMarkup createKeyboard() {
@@ -119,6 +126,9 @@ public class Bot extends TelegramLongPollingBot {
         List<InlineKeyboardButton> row3 = new ArrayList<>();
         row3.add(InlineKeyboardButton.builder().text("Тренировка").callbackData("training").build());
         keyboard.add(row3);
+        List<InlineKeyboardButton> row4 = new ArrayList<>();
+        row1.add(InlineKeyboardButton.builder().text("Удалить словарь").callbackData("delete_dictionaries").build());
+        keyboard.add(row4);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
     }

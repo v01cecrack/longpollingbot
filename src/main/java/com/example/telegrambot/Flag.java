@@ -4,5 +4,6 @@ public enum Flag {
     START,
     ADDNAME,
     ADDWORDS,
-    TRAINING
+    TRAINING,
+    DELETE
 }

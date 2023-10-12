@@ -3,6 +3,7 @@ package com.example.telegrambot;
 import com.example.telegrambot.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class VocabularyService {
     private final VocabularyRepository vocabularyRepository;
     private final VocabularyDto vocabulary = new VocabularyDto();
@@ -49,11 +51,6 @@ public class VocabularyService {
         vocabularyRepository.save(vocabularyMongo);
     }
 
-    public String sayDefault() {
-        return "Кру!";
-    }
-
-
     public List<String> trainVoca(String name) {
         Map<String, String> trainVoca = vocabularyRepository.findByName(name).orElseThrow(() -> new NotFoundException("Ничего не найдено")).getWords();
         List<String> result = new ArrayList<>();
@@ -62,6 +59,11 @@ public class VocabularyService {
             result.add("Правильный ответ - " + word.getKey());
         }
         return result;
+    }
+
+    public String deleteVoca(String name) {
+        vocabularyRepository.deleteById(name);
+        return "Удалено";
     }
 
 
